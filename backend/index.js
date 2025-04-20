@@ -8,10 +8,12 @@ import swaggerJSDoc from 'swagger-jsdoc'
 import swaggerUi from 'swagger-ui-express'
 import { readFileSync } from 'fs'
 import path, { join } from 'path'
+import morgan from 'morgan'
 
 
 const port = process.env.APP_PORT 
 const app = express()
+app.use(morgan('[:method] :url satus :status - :response-time ms'))
 app.use(cors())
 app.use(express.json())
 

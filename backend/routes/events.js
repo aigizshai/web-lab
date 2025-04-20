@@ -9,7 +9,7 @@ router.get("/", async (req, res) => {
       const whereClause = {};
 
       if (category) {
-        console.log(category)
+        //console.log(category)
         whereClause.category = category;
       }
       const events = await Event.findAll({ where: whereClause });
