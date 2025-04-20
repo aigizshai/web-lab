@@ -9,6 +9,7 @@ import swaggerUi from 'swagger-ui-express'
 import { readFileSync } from 'fs'
 import path, { join } from 'path'
 import morgan from 'morgan'
+import { apiKeyMiddleware } from './middlewares/apiKey.js'
 
 
 const port = process.env.APP_PORT 
@@ -43,8 +44,8 @@ const swaggerSpec = swaggerJSDoc(swaggerOptions)
 
 
 
-app.use("/events",eventsRouter)
-app.use("/users",userRouter)
+app.use("/events",apiKeyMiddleware,eventsRouter)
+app.use("/users",apiKeyMiddleware,userRouter)
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec))
 app.get('/', (req, res) => {
     res.send('API работает!')

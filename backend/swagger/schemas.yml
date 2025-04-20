@@ -4,6 +4,13 @@ info:
   description: API для создания и получения мероприятий
   version: 1.0.0
 components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
+  security:
+    - ApiKeyAuth: []
   schemas:
     Event:
       type: object
