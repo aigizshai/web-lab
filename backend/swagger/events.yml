@@ -1,0 +1,60 @@
+openapi: 3.0.0
+
+paths:
+  /events:
+    post:
+      summary: Создать мероприятие
+      tags:
+        - Мероприятия
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Event"
+      responses:
+        201:
+          description: Мероприятие создано
+        400:
+          description: Неверные входные данные
+        500:
+          description: Ошибка сервера
+
+    get:
+      summary: Получить список мероприятий
+      tags:
+        - Мероприятия
+      parameters:
+        - in: query
+          name: category
+          schema:
+            type: string
+            enum: ["встреча", "день рождения", "праздник", "концерт", "лекция", "выставка", "другое"]
+          description: Фильтр по категории
+      responses:
+        200:
+          description: Список мероприятий
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Event"
+    delete:
+      summary: Удалить мероприятие
+      tags:
+        - Мероприятия
+      parameters:
+        - in: path
+          name: eventId
+          required: true
+          description: ID мероприятия
+          schema:
+            type: string
+      responses:
+        204:
+          description: Мероприятие удалено
+        404:
+          description: Мероприятие не найдено
+        500:
+          description: Ошибка сервера

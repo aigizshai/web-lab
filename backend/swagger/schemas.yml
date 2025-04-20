@@ -1,0 +1,42 @@
+openapi: 3.0.0
+info:
+  title: API для управления мероприятиями
+  description: API для создания и получения мероприятий
+  version: 1.0.0
+components:
+  schemas:
+    Event:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        date:
+          type: string
+          format: date
+        category:
+          type: string
+          enum: ["встреча", "день рождения", "праздник", "концерт", "лекция", "выставка", "другое"]
+        location:
+          type: string
+        createdBy:
+          type: date
+      required:
+        - title
+        - date
+        - category
+        - location
+        - createdBy
+
+    User:
+      type: object
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+          format: email
+      required:
+        - name
+        - email
