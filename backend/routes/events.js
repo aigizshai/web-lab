@@ -36,11 +36,11 @@ router.get("/", async (req, res) => {
   // Создать мероприятие
   router.post("/", async (req, res) => {
     try {
-      const { title, description, date, createdBy } = req.body;
+      const { title, description,category,location, date, createdBy } = req.body;
   
       // Валидация
-      if (!title || !date || !createdBy) {
-        return res.status(400).json({ error: "Обязательные поля: title, date, createdBy" });
+      if (!title || !location || !date || !createdBy) {
+        return res.status(400).json({ error: "Обязательные поля: title, location, date, createdBy" });
       }
   
       // Проверка существования пользователя
@@ -49,7 +49,7 @@ router.get("/", async (req, res) => {
         return res.status(400).json({ error: "Пользователь не найден" });
       }
   
-      const event = await Event.create({ title, description, date, createdBy });
+      const event = await Event.create({ title, description,category, location, date, createdBy });
       res.status(201).json(event);
     } catch (error) {
        console.error("Ошибка:", error); 
@@ -65,9 +65,10 @@ router.get("/", async (req, res) => {
         return res.status(404).json({ error: "Мероприятие не найдено" });
       }
   
-      const { title, description, date } = req.body;
+      const { title, description, loacation, date } = req.body;
       if (title) event.title = title;
       if (description) event.description = description;
+      if (loacation) event.loacation = loacation;
       if (date) event.date = date;
   
       await event.save();

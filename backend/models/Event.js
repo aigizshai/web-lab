@@ -27,9 +27,21 @@ import { Sequelize } from "sequelize"
       defaultValue: "другое",
       validate: {
         notEmpty: true,
-        isIn: [["концерт", "лекция", "выставка", "другое"]],
+        isIn: [["встреча","день рождения","праздник","концерт", "лекция", "выставка", "другое"]],
       },
     },
+    
+    //Доп задание
+    location: {
+      type: Sequelize.STRING,
+      allowNull: false,
+      validate: {
+        notEmpty: {
+          msg: "Поле 'location' не может быть пустым",
+        },
+      },
+    },
+
     date: {
       type: Sequelize.DATEONLY,
       allowNull: false,
