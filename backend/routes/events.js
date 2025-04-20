@@ -5,7 +5,14 @@ import { User,Event} from "../models/index.js";
 
 router.get("/", async (req, res) => {
     try {
-      const events = await Event.findAll();
+      const {category} = req.query;
+      const whereClause = {};
+
+      if (category) {
+        console.log(category)
+        whereClause.category = category;
+      }
+      const events = await Event.findAll({ where: whereClause });
       res.status(200).json(events);
     } catch (error) {
         console.error("Ошибка:", error);  

@@ -2,6 +2,9 @@ import { sequelize } from "../configs/db.js";
 import { Sequelize } from "sequelize"
 
   const Event = sequelize.define("Event", {
+
+
+
     id: {
       type: Sequelize.INTEGER,
       primaryKey: true,
@@ -16,6 +19,16 @@ import { Sequelize } from "sequelize"
     },
     description: {
       type: Sequelize.TEXT,
+    },
+    //Доп задание 
+    category: {
+      type: Sequelize.ENUM("встреча","день рождения","праздник","концерт", "лекция", "выставка", "другое"),
+      allowNull: false,
+      defaultValue: "другое",
+      validate: {
+        notEmpty: true,
+        isIn: [["концерт", "лекция", "выставка", "другое"]],
+      },
     },
     date: {
       type: Sequelize.DATEONLY,

@@ -24,7 +24,7 @@ const authDB = async () => {
 
 const syncDB = async () => {
 	try {
-		await sequelize.sync()
+		await sequelize.sync({ alter: true })
 		console.debug('Таблицы синхронизированы!')
 	} catch (error) {
 		console.debug(`Таблицы не синхронизированы. Ошибка: ${error}`)
