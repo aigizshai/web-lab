@@ -10,6 +10,9 @@ import { readFileSync } from 'fs'
 import path, { join } from 'path'
 import morgan from 'morgan'
 import { apiKeyMiddleware } from './middlewares/apiKey.js'
+import passport from 'passport'
+import authRoutes from './routes/auth.js'
+import configurePassport from './configs/passport.js'
 
 
 const port = process.env.APP_PORT 
@@ -17,6 +20,10 @@ const app = express()
 app.use(morgan('[:method] :url satus :status - :response-time ms'))
 app.use(cors())
 app.use(express.json())
+
+
+configurePassport(passport)
+app.use(passport.initialize())
 
 const loadYAML = (file) => {
     return readFileSync(join(process.cwd(), `swagger/${file}.yml`), 'utf-8')
@@ -43,7 +50,7 @@ const swaggerSpec = swaggerJSDoc(swaggerOptions)
 
 
 
-
+app.use("/auth", authRoutes)
 app.use("/events",apiKeyMiddleware,eventsRouter)
 app.use("/users",apiKeyMiddleware,userRouter)
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec))

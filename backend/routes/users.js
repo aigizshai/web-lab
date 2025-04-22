@@ -1,7 +1,8 @@
 import express  from "express";
 const router = express.Router();
 import {User,Event} from "../models/index.js";
-
+import passport from "passport";
+router.use(passport.authenticate("jwt", { session: false }));
 // Создать пользователя
 router.post("/", async (req, res) => {
   try {

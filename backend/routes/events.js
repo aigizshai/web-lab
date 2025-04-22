@@ -1,6 +1,8 @@
 import express from "express";
 const router = express.Router();
 import { User,Event} from "../models/index.js";
+import passport from "passport";
+
 
 
 router.get("/", async (req, res) => {
@@ -19,7 +21,8 @@ router.get("/", async (req, res) => {
       res.status(500).json({ error: "Ошибка сервера" });
     }
   });
-  
+
+  router.use(passport.authenticate("jwt", { session: false }));
   // Получить мероприятие по ID
   router.get("/:id", async (req, res) => {
     try {
