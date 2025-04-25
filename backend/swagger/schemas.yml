@@ -28,14 +28,13 @@ components:
         location:
           type: string
         createdBy:
-          type: date
+          type: string
       required:
         - title
         - date
         - category
         - location
         - createdBy
-
     User:
       type: object
       properties:
