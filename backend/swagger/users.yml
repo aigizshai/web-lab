@@ -2,6 +2,9 @@ openapi: 3.0.0
 paths:
  /users:
   post:
+    security:
+     - ApiKeyAuth: []
+     - BearerAuth: []
    summary: Создать пользователя
    tags:
     - Пользователи
@@ -19,6 +22,9 @@ paths:
     500:
      description: Ошибка сервера
   get:
+    security:
+     - ApiKeyAuth: []
+     - BearerAuth: []
    summary: Получить список пользователей
    tags:
     - Пользователи

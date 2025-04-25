@@ -9,6 +9,10 @@ components:
       type: apiKey
       in: header
       name: X-API-Key
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
   security:
     - ApiKeyAuth: []
   schemas:
@@ -28,7 +32,7 @@ components:
         location:
           type: string
         createdBy:
-          type: date
+          type: string
       required:
         - title
         - date

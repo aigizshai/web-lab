@@ -68,10 +68,10 @@ router.get("/", async (req, res) => {
         return res.status(404).json({ error: "Мероприятие не найдено" });
       }
   
-      const { title, description, loacation, date } = req.body;
+      const { title, description, location, date } = req.body;
       if (title) event.title = title;
       if (description) event.description = description;
-      if (loacation) event.loacation = loacation;
+      if (location) event.location = location;
       if (date) event.date = date;
   
       await event.save();

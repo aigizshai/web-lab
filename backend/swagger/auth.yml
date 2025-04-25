@@ -1,0 +1,93 @@
+openapi: 3.0.0
+paths:
+  auth/register:
+    post:
+      summary: Регистрация пользователя
+      tags: [Аутентификация]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+              required: [name, email, password]
+      responses:
+        201:
+          description: Пользователь создан
+        400:
+          description: Неверные входные данные
+        409:
+          description: Email уже используется
+        500:
+          description: Ошибка сервера
+
+  auth/login:
+    post:
+      summary: Вход в систему
+      tags: [Аутентификация]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+              required: [email, password]
+      responses:
+        200:
+          description: Успешный вход
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  accessToken:
+                    type: string
+                  refreshToken:
+                    type: string
+        401:
+          description: Неверные учетные данные
+        500:
+          description: Ошибка сервера
+
+  auth/refresh:
+    post:
+      summary: Обновить access token
+      tags: [Аутентификация]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                refreshToken:
+                  type: string
+              required: [refreshToken]
+      responses:
+        200:
+          description: Новый access token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  accessToken:
+                    type: string
+        401:
+          description: Недействительный токен
+        500:
+          description: Ошибка обновления

@@ -2,7 +2,32 @@ openapi: 3.0.0
 
 paths:
   /events:
+    get:
+      security:
+        - ApiKeyAuth: []
+        summary: Получить список мероприятий
+        tags:
+          - Мероприятия
+        parameters:
+          - in: query
+            name: category
+            schema:
+              type: string
+              enum: ["встреча", "день рождения", "праздник", "концерт", "лекция", "выставка", "другое"]
+            description: Фильтр по категории
+        responses:
+          200:
+            description: Список мероприятий
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    $ref: "#/components/schemas/Event"
     post:
+      security:
+        - ApiKeyAuth: []
+        - BearerAuth: []
       summary: Создать мероприятие
       tags:
         - Мероприятия
@@ -20,27 +45,11 @@ paths:
         500:
           description: Ошибка сервера
 
-    get:
-      summary: Получить список мероприятий
-      tags:
-        - Мероприятия
-      parameters:
-        - in: query
-          name: category
-          schema:
-            type: string
-            enum: ["встреча", "день рождения", "праздник", "концерт", "лекция", "выставка", "другое"]
-          description: Фильтр по категории
-      responses:
-        200:
-          description: Список мероприятий
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/Event"
+   
     delete:
+      security:
+        - ApiKeyAuth: []
+        - BearerAuth: []
       summary: Удалить мероприятие
       tags:
         - Мероприятия
