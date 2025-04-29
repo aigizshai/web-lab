@@ -21,8 +21,6 @@ app.use(morgan('[:method] :url satus :status - :response-time ms'))
 app.use(cors())
 app.use(express.json())
 
-console.log("JWT_ACCESS_EXPIRES:" , process.env.JWT_ACCESS_EXPIRES);
-console.log("JWT_REFRESH_EXPIRES", process.env.JWT_REFRESH_EXPIRES);
 
 
 
@@ -43,6 +41,7 @@ const swaggerOptions = {
         servers: [{url: 'http://localhost:9000',},],
         components: loadYAML("schemas").components,
         paths: {
+            ...loadYAML("auth").paths,
             ...loadYAML("events").paths,
             ...loadYAML("users").paths,
         }

@@ -1,7 +1,33 @@
 openapi: 3.0.0
 paths:
-  auth/register:
+  /events:
+    get:
+      security:
+        - ApiKeyAuth: []
+      summary: Получить список мероприятий
+      tags: [Мероприятия]
+      parameters:
+        - in: query
+          name: category
+          schema:
+            type: string
+            enum: ["встреча", "день рождения", "праздник", "концерт", "лекция", "выставка", "другое"]
+          description: Фильтр по категории
+      responses:
+        200:
+          description: Список мероприятий
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Event"
+        500:
+          description: Ошибка сервера
+  /auth/register:
     post:
+      security:
+        - ApiKeyAuth: []
       summary: Регистрация пользователя
       tags: [Аутентификация]
       requestBody:
@@ -29,8 +55,10 @@ paths:
         500:
           description: Ошибка сервера
 
-  auth/login:
+  /auth/login:
     post:
+      security:
+        - ApiKeyAuth: []
       summary: Вход в систему
       tags: [Аутентификация]
       requestBody:
@@ -63,8 +91,10 @@ paths:
         500:
           description: Ошибка сервера
 
-  auth/refresh:
+  /auth/refresh:
     post:
+      security:
+        - ApiKeyAuth: []
       summary: Обновить access token
       tags: [Аутентификация]
       requestBody:

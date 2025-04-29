@@ -5,25 +5,25 @@ paths:
     get:
       security:
         - ApiKeyAuth: []
-        summary: Получить список мероприятий
-        tags:
-          - Мероприятия
-        parameters:
-          - in: query
-            name: category
-            schema:
-              type: string
-              enum: ["встреча", "день рождения", "праздник", "концерт", "лекция", "выставка", "другое"]
-            description: Фильтр по категории
-        responses:
-          200:
-            description: Список мероприятий
-            content:
-              application/json:
-                schema:
-                  type: array
-                  items:
-                    $ref: "#/components/schemas/Event"
+      summary: Получить список мероприятий
+      tags:
+        - Мероприятия
+      parameters:
+        - in: query
+          name: category
+      schema:
+        type: array
+        items:
+          $ref: "#/components/schemas/Event"
+      responses:
+        200:
+          description: Список мероприятий
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Event"
     post:
       security:
         - ApiKeyAuth: []
@@ -44,8 +44,6 @@ paths:
           description: Неверные входные данные
         500:
           description: Ошибка сервера
-
-   
     delete:
       security:
         - ApiKeyAuth: []
