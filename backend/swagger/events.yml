@@ -11,10 +11,8 @@ paths:
       parameters:
         - in: query
           name: category
-      schema:
-        type: array
-        items:
-          $ref: "#/components/schemas/Event"
+          schema:
+            type: string
       responses:
         200:
           description: Список мероприятий
@@ -44,6 +42,8 @@ paths:
           description: Неверные входные данные
         500:
           description: Ошибка сервера
+
+  /events/{id}:
     delete:
       security:
         - ApiKeyAuth: []
@@ -53,11 +53,11 @@ paths:
         - Мероприятия
       parameters:
         - in: path
-          name: eventId
+          name: id
           required: true
           description: ID мероприятия
           schema:
-            type: string
+            type: integer
       responses:
         204:
           description: Мероприятие удалено

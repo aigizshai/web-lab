@@ -44,6 +44,9 @@ paths:
                   format: email
                 password:
                   type: string
+                  length:
+                    min: 8
+                    max: 100
               required: [name, email, password]
       responses:
         201:

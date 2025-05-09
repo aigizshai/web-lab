@@ -13,6 +13,7 @@ import { apiKeyMiddleware } from './middlewares/apiKey.js'
 import passport from 'passport'
 import authRoutes from './routes/auth.js'
 import configurePassport from './configs/passport.js'
+import { valid } from './middlewares/validation.js'
 
 
 const port = process.env.APP_PORT 
@@ -26,6 +27,8 @@ app.use(express.json())
 
 configurePassport(passport)
 app.use(passport.initialize())
+app.use(valid)
+
 
 const loadYAML = (file) => {
     return readFileSync(join(process.cwd(), `swagger/${file}.yml`), 'utf-8')
@@ -60,6 +63,9 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec))
 app.get('/', (req, res) => {
     res.send('API работает!')
 })  
+
+
+
 
 
 

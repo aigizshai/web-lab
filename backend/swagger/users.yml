@@ -8,6 +8,26 @@ paths:
       summary: Создать пользователя
       tags:
         - Пользователи
+      parameters:
+        - in: query
+          name: name
+          required: true
+          description: Имя пользователя
+          schema:
+            type: string
+        - in: query
+          name: email
+          required: true
+          description: Email пользователя
+          schema:
+            type: string
+            format: email
+        - in: query
+          name: password
+          required: true
+          description: Пароль пользователя
+          schema:
+            type: string
       requestBody:
         required: true
         content:
