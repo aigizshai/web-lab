@@ -21,7 +21,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/Event"
+                  $ref: '#/components/schemas/Event'
     post:
       security:
         - ApiKeyAuth: []
@@ -34,7 +34,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Event"
+              $ref: '#/components/schemas/Event'
       responses:
         201:
           description: Мероприятие создано

@@ -11,7 +11,16 @@ paths:
           name: category
           schema:
             type: string
-            enum: ["встреча", "день рождения", "праздник", "концерт", "лекция", "выставка", "другое"]
+            enum:
+              [
+                'встреча',
+                'день рождения',
+                'праздник',
+                'концерт',
+                'лекция',
+                'выставка',
+                'другое',
+              ]
           description: Фильтр по категории
       responses:
         200:
@@ -21,7 +30,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/Event"
+                  $ref: '#/components/schemas/Event'
         500:
           description: Ошибка сервера
   /auth/register:
