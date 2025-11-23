@@ -84,3 +84,5 @@ app.listen(port, (err?: Error) => {
   syncDB();
   console.log(`Сервер запущен на порту http://localhost:${port}`);
 });
+
+const test: any = 'hello';
