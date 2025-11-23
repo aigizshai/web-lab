@@ -86,3 +86,4 @@ app.listen(port, (err?: Error) => {
 });
 
 const test: any = 'hello';
+const test: any = 'hello';
