@@ -14,7 +14,7 @@ import passport from 'passport';
 import authRoutes from './routes/auth';
 import configurePassport from './configs/passport';
 import { valid } from './middlewares/validation';
-import {parse} from 'yaml';
+import { parse } from 'yaml';
 
 const port: number = parseInt(process.env.APP_PORT || '9000');
 const app = express();
@@ -85,5 +85,6 @@ app.listen(port, (err?: Error) => {
   console.log(`Сервер запущен на порту http://localhost:${port}`);
 });
 
+const test: any = 'hello';
 const test: any = 'hello';
 const test: any = 'hello';
