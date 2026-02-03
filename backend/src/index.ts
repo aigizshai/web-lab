@@ -1,19 +1,20 @@
+import 'module-alias/register';
 import express from 'express';
 import 'dotenv/config.js';
-import { authDB, syncDB } from './configs/db';
-import eventsRouter from './routes/events';
-import userRouter from './routes/users';
+import { authDB, syncDB } from '@configs/db';
+import eventsRouter from '@routes/events';
+import userRouter from '@routes/users';
 import { readFileSync } from 'fs';
 import { join } from 'path';
 import cors from 'cors';
 import morgan from 'morgan';
 import swaggerJSDoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
-import { apiKeyMiddleware } from './middlewares/apiKey';
+import { apiKeyMiddleware } from '@middlewares/apiKey';
 import passport from 'passport';
-import authRoutes from './routes/auth';
-import configurePassport from './configs/passport';
-import { valid } from './middlewares/validation';
+import authRoutes from '@routes/auth';
+import configurePassport from '@configs/passport';
+import { valid } from '@middlewares/validation';
 import { parse } from 'yaml';
 
 const port: number = parseInt(process.env.APP_PORT || '9000');
@@ -40,7 +41,7 @@ type SwaggerYaml = SwaggerComponents & SwaggerPaths;
 
 const loadYAML = (file: string): SwaggerYaml => {
   const content = readFileSync(
-    join(process.cwd(), `swagger/${file}.yml`),
+    join(process.cwd(), `/swagger/${file}.yml`),
     'utf-8',
   );
   return parse(content) as SwaggerYaml;
@@ -84,7 +85,3 @@ app.listen(port, (err?: Error) => {
   syncDB();
   console.log(`Сервер запущен на порту http://localhost:${port}`);
 });
-
-const test: any = 'hello';
-const test: any = 'hello';
-const test: any = 'hello';

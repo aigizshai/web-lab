@@ -1,8 +1,8 @@
 import express from 'express';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
-import { User } from '../models/index';
-import RefreshToken from '../models/RefreshToken';
+import User from '@models/User';
+import RefreshToken from '@models/RefreshToken';
 
 dotenv.config();
 const router = express.Router();

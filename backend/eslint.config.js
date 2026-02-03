@@ -1,14 +1,24 @@
-import js from '@eslint/js';
-import globals from 'globals';
-import tseslint from 'typescript-eslint';
-import { defineConfig } from 'eslint/config';
-
-export default defineConfig([
-  {
-    files: ['**/*.{js,mjs,cjs,ts,mts,cts}'],
-    plugins: { js },
-    extends: ['js/recommended'],
-    languageOptions: { globals: globals.browser },
+module.exports = {
+  parser: '@typescript-eslint/parser',
+  extends: [
+    'eslint:recommended',
+    'plugin:@typescript-eslint/recommended',
+    'prettier'
+  ],
+  plugins: ['@typescript-eslint', 'prettier'],
+  rules: {
+    '@typescript-eslint/no-unused-vars': 'error',
+    '@typescript-eslint/explicit-function-return-type': 'off',
+    'prettier/prettier': 'error',
+    '@typescript-eslint/no-explicit-any': 'warn'
   },
-  tseslint.configs.recommended,
-]);
+  env: {
+    node: true,
+    es6: true
+  },
+  parserOptions: {
+    ecmaVersion: 2020,
+    sourceType: 'module',
+    project: './tsconfig.json'
+  }
+};

@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 
-export const apiKeyMiddleware = (
+const apiKeyMiddleware = (
   req: Request,
   res: Response,
   next: NextFunction,
@@ -16,3 +16,5 @@ export const apiKeyMiddleware = (
   }
   next();
 };
+
+export { apiKeyMiddleware };

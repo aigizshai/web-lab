@@ -5,7 +5,7 @@ import {
   VerifyCallback,
 } from 'passport-jwt';
 import { PassportStatic } from 'passport';
-import { User } from '../models/index';
+import User from '@models/User';
 import dotenv from 'dotenv';
 
 dotenv.config();

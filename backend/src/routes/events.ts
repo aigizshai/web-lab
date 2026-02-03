@@ -1,5 +1,6 @@
 import express from 'express';
-import { User, Event } from '../models/index';
+import User from '@models/User';
+import Event from '@models/Event';
 import passport from 'passport';
 
 const router = express.Router();
@@ -85,11 +86,9 @@ router.post(
 
       // Валидация
       if (!title || !location || !date || !createdBy) {
-        res
-          .status(400)
-          .json({
-            error: 'Обязательные поля: title, location, date, createdBy',
-          });
+        res.status(400).json({
+          error: 'Обязательные поля: title, location, date, createdBy',
+        });
         return;
       }
 

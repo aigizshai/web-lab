@@ -1,4 +1,4 @@
-import { sequelize } from '../configs/db';
+import { sequelize } from '@configs/db';
 import { DataTypes, Model, Optional } from 'sequelize';
 
 interface EventAttributes {
