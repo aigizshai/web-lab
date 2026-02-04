@@ -1,0 +1,98 @@
+// src/pages/Events/components/DeleteConfirmation/DeleteConfirmation.module.scss
+.deleteConfirmation {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+  
+    .overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.5);
+    }
+  
+    .modal {
+      position: relative;
+      background-color: var(--light-color);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-lg);
+      padding: var(--spacing-xl);
+      width: 90%;
+      max-width: 400px;
+      z-index: 2001;
+  
+      h3 {
+        color: var(--text-color);
+        margin-bottom: var(--spacing-md);
+        font-size: var(--font-size-lg);
+        font-weight: 600;
+      }
+  
+      p {
+        color: var(--text-color);
+        margin-bottom: var(--spacing-md);
+        line-height: 1.5;
+  
+        strong {
+          color: var(--primary-color);
+        }
+      }
+  
+      .warning {
+        color: var(--accent-color);
+        font-weight: 500;
+      }
+  
+      .actions {
+        display: flex;
+        gap: var(--spacing-md);
+        margin-top: var(--spacing-lg);
+  
+        button {
+          flex: 1;
+          padding: var(--spacing-md);
+          border: none;
+          border-radius: var(--radius-md);
+          font-size: var(--font-size-md);
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.3s;
+  
+          &:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+          }
+        }
+  
+        .confirmButton {
+          background-color: var(--accent-color);
+          color: var(--light-color);
+  
+          &:hover:not(:disabled) {
+            background-color: var(--accent-dark);
+            transform: translateY(-2px);
+          }
+        }
+  
+        .cancelButton {
+          background-color: transparent;
+          border: 2px solid var(--border-color);
+          color: var(--text-secondary);
+  
+          &:hover:not(:disabled) {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+            background-color: rgba(52, 152, 219, 0.05);
+          }
+        }
+      }
+    }
+  }

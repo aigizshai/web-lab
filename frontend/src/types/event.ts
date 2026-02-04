@@ -8,7 +8,14 @@ export interface Event {
     location: string;
     createdBy: number;
   }
-  
+  export interface CreateEventRequest {
+    title: string;
+    description: string;
+    date: string;
+    category: string;
+    location: string;
+    createdBy: number;
+  }
   export interface User {
     id: number;
     name: string;

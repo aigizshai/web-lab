@@ -15,6 +15,11 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+  
+      @media (max-width: 768px) {
+        flex-direction: column;
+        gap: var(--spacing-md);
+      }
     }
   
     .logo {
@@ -22,6 +27,7 @@
         font-size: var(--font-size-xl);
         color: var(--primary-color);
         font-weight: 600;
+        margin: 0;
       }
     }
   
@@ -30,6 +36,7 @@
         display: flex;
         gap: var(--spacing-md);
         align-items: center;
+        flex-wrap: wrap;
   
         span {
           color: var(--text-secondary);
@@ -37,6 +44,34 @@
           padding: var(--spacing-sm) var(--spacing-md);
           background-color: var(--bg-secondary);
           border-radius: var(--radius-md);
+          font-size: var(--font-size-sm);
+        }
+      }
+  
+      .navButton {
+        padding: var(--spacing-sm) var(--spacing-md);
+        background-color: transparent;
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-md);
+        color: var(--text-secondary);
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s;
+  
+        &:hover {
+          border-color: var(--primary-color);
+          color: var(--primary-color);
+          background-color: rgba(52, 152, 219, 0.05);
+        }
+  
+        &:last-child {
+          background-color: var(--accent-color);
+          color: white;
+          border-color: var(--accent-color);
+  
+          &:hover {
+            background-color: var(--accent-dark);
+          }
         }
       }
     }
@@ -47,135 +82,113 @@
     padding: var(--spacing-xl) 0;
   
     .container {
-      > h2 {
-        font-size: var(--font-size-xl);
-        color: var(--text-color);
+      > .error {
+        background-color: rgba(231, 76, 60, 0.1);
+        border: 1px solid var(--accent-color);
+        color: var(--accent-color);
+        padding: var(--spacing-md);
+        border-radius: var(--radius-md);
         margin-bottom: var(--spacing-lg);
-        font-weight: 600;
       }
+    }
+  }
   
-      > p {
-        color: var(--text-secondary);
-        text-align: center;
-        padding: var(--spacing-xl);
+  .pageHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-lg);
+    flex-wrap: wrap;
+    gap: var(--spacing-md);
+  
+    h2 {
+      font-size: var(--font-size-xl);
+      color: var(--text-color);
+      margin: 0;
+      font-weight: 600;
+    }
+  
+    .createButton {
+      padding: var(--spacing-md) var(--spacing-lg);
+      background-color: var(--secondary-color);
+      color: var(--light-color);
+      border: none;
+      border-radius: var(--radius-md);
+      font-size: var(--font-size-md);
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+  
+      &:hover {
+        background-color: var(--secondary-dark);
+        transform: translateY(-2px);
+      }
+    }
+  }
+  
+  .emptyState {
+    text-align: center;
+    padding: var(--spacing-xl);
+    background-color: var(--light-color);
+    border-radius: var(--radius-lg);
+    border: 2px dashed var(--border-color);
+  
+    p {
+      color: var(--text-secondary);
+      margin-bottom: var(--spacing-lg);
+      font-size: var(--font-size-lg);
+    }
+  
+    .createFirstButton {
+      padding: var(--spacing-md) var(--spacing-lg);
+      background-color: var(--primary-color);
+      color: var(--light-color);
+      border: none;
+      border-radius: var(--radius-md);
+      font-size: var(--font-size-md);
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+  
+      &:hover {
+        background-color: var(--primary-dark);
+        transform: translateY(-2px);
       }
     }
   }
   
   .eventsGrid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
     gap: var(--spacing-lg);
-    margin-top: var(--spacing-lg);
-  }
-  
-  .eventCard {
-    background-color: var(--light-color);
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-md);
-    padding: var(--spacing-lg);
-    transition: transform 0.3s, box-shadow 0.3s;
-    border: 1px solid var(--border-color);
-    display: flex;
-    flex-direction: column;
-  
-    &:hover {
-      transform: translateY(-4px);
-      box-shadow: var(--shadow-lg);
-      border-color: var(--primary-color);
-    }
-  
-    h3 {
-      font-size: var(--font-size-lg);
-      color: var(--text-color);
-      margin-bottom: var(--spacing-md);
-      font-weight: 600;
-      line-height: 1.3;
-    }
-  
-    .description {
-      color: var(--text-secondary);
-      margin-bottom: var(--spacing-md);
-      flex: 1;
-      font-size: var(--font-size-sm);
-      line-height: 1.5;
-    }
-  
-    .details {
-      display: flex;
-      flex-wrap: wrap;
-      gap: var(--spacing-sm);
-      margin-bottom: var(--spacing-md);
-      font-size: var(--font-size-sm);
-  
-      .category, .date, .location {
-        padding: var(--spacing-xs) var(--spacing-sm);
-        border-radius: var(--radius-sm);
-        font-weight: 500;
-      }
-  
-      .category {
-        background-color: rgba(46, 204, 113, 0.1);
-        color: var(--secondary-dark);
-      }
-  
-      .date {
-        background-color: rgba(52, 152, 219, 0.1);
-        color: var(--primary-dark);
-      }
-  
-      .location {
-        background-color: rgba(155, 89, 182, 0.1);
-        color: #9b59b6;
-      }
-    }
-  
-    .creator {
-      color: var(--text-light);
-      font-size: var(--font-size-sm);
-      border-top: 1px solid var(--border-color);
-      padding-top: var(--spacing-sm);
-      margin-top: var(--spacing-sm);
-    }
-  }
-  
-  .error {
-    // @extend .error-message;
-    margin-bottom: var(--spacing-lg);
   }
   
   .loading {
-    @extend .loading;
-    grid-column: 1 / -1;
+    text-align: center;
+    padding: var(--spacing-xl);
+    color: var(--text-secondary);
+    font-size: var(--font-size-lg);
   }
   
   // Адаптивность
   @media (max-width: 768px) {
     .header {
-      .container {
-        flex-direction: column;
-        gap: var(--spacing-md);
-      }
-      
       .nav .authInfo {
-        flex-wrap: wrap;
         justify-content: center;
+      }
+    }
+  
+    .pageHeader {
+      flex-direction: column;
+      align-items: stretch;
+      text-align: center;
+  
+      .createButton {
+        width: 100%;
       }
     }
   
     .eventsGrid {
       grid-template-columns: 1fr;
-      gap: var(--spacing-md);
-    }
-  
-    .eventCard {
-      padding: var(--spacing-md);
-    }
-  }
-  
-  @media (max-width: 480px) {
-    .main .container > h2 {
-      font-size: var(--font-size-lg);
-      text-align: center;
     }
   }

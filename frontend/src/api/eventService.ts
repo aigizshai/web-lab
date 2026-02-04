@@ -1,6 +1,7 @@
 // src/api/eventService.ts
+// src/api/eventService.ts
 import axiosInstance from './axios';
-import type { Event } from '../types/event';
+import type { Event, CreateEventRequest } from '../types/event';
 
 export const eventService = {
   getEvents: async (category?: string): Promise<Event[]> => {
@@ -9,7 +10,7 @@ export const eventService = {
     return response.data;
   },
   
-  createEvent: async (data: Omit<Event, 'id'>): Promise<Event> => {
+  createEvent: async (data: CreateEventRequest): Promise<Event> => {
     const response = await axiosInstance.post('/events', data);
     return response.data;
   },
