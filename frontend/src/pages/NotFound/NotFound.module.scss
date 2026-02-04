@@ -1,0 +1,82 @@
+// src/pages/NotFound/NotFound.module.scss
+.notFound {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  padding: var(--spacing-md);
+
+  .container {
+    text-align: center;
+    background-color: var(--light-color);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    padding: var(--spacing-xl);
+    max-width: 500px;
+    width: 100%;
+  }
+
+  h1 {
+    font-size: 6rem;
+    color: var(--primary-color);
+    margin-bottom: var(--spacing-md);
+    line-height: 1;
+    font-weight: 700;
+  }
+
+  h2 {
+    font-size: var(--font-size-xl);
+    color: var(--text-color);
+    margin-bottom: var(--spacing-md);
+    font-weight: 600;
+  }
+
+  p {
+    color: var(--text-secondary);
+    margin-bottom: var(--spacing-xl);
+    line-height: 1.6;
+  }
+
+  button {
+    padding: var(--spacing-md) var(--spacing-xl);
+    background-color: var(--primary-color);
+    color: var(--light-color);
+    border: none;
+    border-radius: var(--radius-md);
+    font-size: var(--font-size-md);
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+
+    &:hover {
+      background-color: var(--primary-dark);
+      transform: translateY(-2px);
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
+  }
+}
+
+// Адаптивность
+@media (max-width: 480px) {
+  .notFound {
+    .container {
+      padding: var(--spacing-lg);
+    }
+
+    h1 {
+      font-size: 4rem;
+    }
+
+    h2 {
+      font-size: var(--font-size-lg);
+    }
+
+    button {
+      width: 100%;
+    }
+  }
+}
