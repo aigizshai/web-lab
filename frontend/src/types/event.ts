@@ -7,6 +7,10 @@ export interface Event {
     category: string;
     location: string;
     createdBy: number;
+    coordinates?: {
+      lat: number;
+      lng: number;
+    };
   }
   export interface CreateEventRequest {
     title: string;

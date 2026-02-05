@@ -1,0 +1,17 @@
+{
+  "name": "web-lab",
+  "private": true,
+  "scripts": {
+    "prepare": "husky"
+  },
+  "devDependencies": {
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.7"
+  },
+  "lint-staged": {
+    "backend/src/**/*.ts": [
+      "cd backend && prettier --write",
+      "cd backend && eslint --fix"
+    ]
+  }
+}
