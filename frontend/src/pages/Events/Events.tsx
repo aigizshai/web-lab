@@ -3,7 +3,7 @@ import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { eventService } from '../../api/eventService';
 import { storage } from '../../utils/storage';
-import type { Event } from '../../types/event';
+import type { Event, EventCategory } from '../../types/event';
 import CreateEventForm from './components/CreateEventForm/CreateEventForm';
 import EventCard from './components/EventCard/EventCard';
 import YandexMap from './components/YandexMap/YandexMap';
@@ -11,17 +11,6 @@ import { parseCoordinates } from '../../utils/coordinates';
 import styles from './Events.module.scss';
 
 const DEFAULT_CENTER: [number, number] = [55.7558, 37.6173]; // Москва
-
-// Тип для категорий
-type EventCategory = 
-  | 'встреча'
-  | 'день рождения'
-  | 'праздник'
-  | 'концерт'
-  | 'лекция'
-  | 'выставка'
-  | 'другое'
-  | 'all';
 
 const Events = () => {
   const navigate = useNavigate();
@@ -32,11 +21,13 @@ const Events = () => {
   const [error, setError] = useState('');
 
   const [showCreateForm, setShowCreateForm] = useState(false);
-  const [showFilter, setShowFilter] = useState(false);
+  const [showCategoryFilter, setShowCategoryFilter] = useState(false);
+  const [showDateFilter, setShowDateFilter] = useState(false);
   const [deletingId, setDeletingId] = useState<number | null>(null);
 
   const [selectedEventId, setSelectedEventId] = useState<number | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<EventCategory>('all');
+  const [dateRange, setDateRange] = useState({ startDate: '', endDate: '' });
 
   // controlled map state
   const [mapCenter, setMapCenter] = useState<[number, number]>(DEFAULT_CENTER);
@@ -72,16 +63,45 @@ const Events = () => {
     }
   };
 
-  // ---------- filter events by category ----------
+  // ---------- filter events ----------
   useEffect(() => {
-    if (selectedCategory === 'all') {
-      setFilteredEvents(events);
-    } else {
-      const filtered = events.filter(event => event.category === selectedCategory);
-      setFilteredEvents(filtered);
+    let filtered = events;
+
+    // Фильтр по категории
+    if (selectedCategory !== 'all') {
+      filtered = filtered.filter(event => event.category === selectedCategory);
     }
+
+    // Фильтр по дате
+    if (dateRange.startDate || dateRange.endDate) {
+      filtered = filtered.filter(event => {
+        const eventDate = new Date(event.date);
+        
+        if (dateRange.startDate && dateRange.endDate) {
+          const startDate = new Date(dateRange.startDate);
+          const endDate = new Date(dateRange.endDate);
+          endDate.setHours(23, 59, 59, 999); // Включить весь последний день
+          return eventDate >= startDate && eventDate <= endDate;
+        }
+        
+        if (dateRange.startDate) {
+          const startDate = new Date(dateRange.startDate);
+          return eventDate >= startDate;
+        }
+        
+        if (dateRange.endDate) {
+          const endDate = new Date(dateRange.endDate);
+          endDate.setHours(23, 59, 59, 999);
+          return eventDate <= endDate;
+        }
+        
+        return true;
+      });
+    }
+
+    setFilteredEvents(filtered);
     setSelectedEventId(null); // Сбрасываем выбранное мероприятие при смене фильтра
-  }, [selectedCategory, events]);
+  }, [selectedCategory, dateRange, events]);
 
   // ---------- helpers ----------
   const eventsWithValidCoordinates = useMemo(() => {
@@ -114,6 +134,20 @@ const Events = () => {
     const allCategories = events.map(event => event.category);
     const uniqueCategories = [...new Set(allCategories)];
     return uniqueCategories.filter(cat => cat !== 'all').sort();
+  }, [events]);
+
+  // Получаем минимальную и максимальную даты для ограничения input
+  const dateRangeInfo = useMemo(() => {
+    if (events.length === 0) return { minDate: '', maxDate: '' };
+    
+    const dates = events.map(event => new Date(event.date));
+    const minDate = new Date(Math.min(...dates.map(d => d.getTime())));
+    const maxDate = new Date(Math.max(...dates.map(d => d.getTime())));
+    
+    return {
+      minDate: minDate.toISOString().split('T')[0],
+      maxDate: maxDate.toISOString().split('T')[0]
+    };
   }, [events]);
 
   // ---------- actions ----------
@@ -175,6 +209,18 @@ const Events = () => {
     setSelectedCategory(category);
   }, []);
 
+  // ---------- date filter ----------
+  const handleDateChange = useCallback((field: 'startDate' | 'endDate', value: string) => {
+    setDateRange(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  }, []);
+
+  const handleClearDateFilter = useCallback(() => {
+    setDateRange({ startDate: '', endDate: '' });
+  }, []);
+
   const handleLogout = () => {
     storage.clear();
     navigate('/');
@@ -208,8 +254,11 @@ const Events = () => {
             </div>
 
             <div className={styles.pageActions}>
-              <button onClick={() => setShowFilter(v => !v)}>
-                {showFilter ? 'Скрыть фильтр' : 'Фильтр по категориям'}
+              <button onClick={() => setShowCategoryFilter(v => !v)}>
+                {showCategoryFilter ? 'Скрыть категории' : 'Фильтр по категориям'}
+              </button>
+              <button onClick={() => setShowDateFilter(v => !v)}>
+                {showDateFilter ? 'Скрыть даты' : 'Фильтр по дате'}
               </button>
               <button onClick={() => setShowCreateForm(v => !v)}>
                 {showCreateForm ? 'Скрыть форму' : '+ Создать мероприятие'}
@@ -225,7 +274,7 @@ const Events = () => {
             />
           )}
 
-          {showFilter && (
+          {showCategoryFilter && (
             <div className={styles.filterContainer}>
               <div className={styles.filterHeader}>
                 <h3>Фильтр по категориям</h3>
@@ -272,6 +321,59 @@ const Events = () => {
             </div>
           )}
 
+          {showDateFilter && (
+            <div className={styles.filterContainer}>
+              <div className={styles.filterHeader}>
+                <h3>Фильтр по дате</h3>
+                {(dateRange.startDate || dateRange.endDate) && (
+                  <button 
+                    onClick={handleClearDateFilter}
+                    className={styles.clearButton}
+                  >
+                    Сбросить фильтр
+                  </button>
+                )}
+              </div>
+              
+              <div className={styles.dateRange}>
+                <div className={styles.dateInput}>
+                  <label htmlFor="startDate">Дата начала:</label>
+                  <input
+                    type="date"
+                    id="startDate"
+                    value={dateRange.startDate}
+                    onChange={(e) => handleDateChange('startDate', e.target.value)}
+                    min={dateRangeInfo.minDate}
+                    max={dateRange.endDate || dateRangeInfo.maxDate}
+                  />
+                </div>
+                
+                <div className={styles.dateSeparator}>—</div>
+                
+                <div className={styles.dateInput}>
+                  <label htmlFor="endDate">Дата окончания:</label>
+                  <input
+                    type="date"
+                    id="endDate"
+                    value={dateRange.endDate}
+                    onChange={(e) => handleDateChange('endDate', e.target.value)}
+                    min={dateRange.startDate || dateRangeInfo.minDate}
+                    max={dateRangeInfo.maxDate}
+                  />
+                </div>
+              </div>
+              
+              {(dateRange.startDate || dateRange.endDate) && (
+                <div className={styles.selectedInfo}>
+                  <span>Выбран период: </span>
+                  <strong>
+                    {dateRange.startDate || '...'} – {dateRange.endDate || '...'}
+                  </strong>
+                </div>
+              )}
+            </div>
+          )}
+
           <div className={styles.layout}>
             {/* -------- list -------- */}
             <div className={styles.eventsList}>
@@ -279,10 +381,10 @@ const Events = () => {
                 <div>Загрузка мероприятий...</div>
               ) : filteredEvents.length === 0 ? (
                 <div className={styles.emptyState}>
-                  {selectedCategory === 'all' ? (
+                  {selectedCategory === 'all' && !dateRange.startDate && !dateRange.endDate ? (
                     <p>Мероприятий пока нет</p>
                   ) : (
-                    <p>В категории "{selectedCategory}" мероприятий не найдено</p>
+                    <p>Мероприятий по выбранным фильтрам не найдено</p>
                   )}
                 </div>
               ) : (
