@@ -1,9 +1,9 @@
 // src/pages/Events/Events.tsx
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { eventService } from '../../api/eventService';
 import { storage } from '../../utils/storage';
-import type { Event, EventCategory } from '../../types/event';
+import type { Event, EventCategory  } from '../../types/event';
 import CreateEventForm from './components/CreateEventForm/CreateEventForm';
 import EventCard from './components/EventCard/EventCard';
 import YandexMap from './components/YandexMap/YandexMap';
@@ -11,6 +11,7 @@ import { parseCoordinates } from '../../utils/coordinates';
 import styles from './Events.module.scss';
 
 const DEFAULT_CENTER: [number, number] = [55.7558, 37.6173]; // Москва
+
 
 const Events = () => {
   const navigate = useNavigate();
@@ -23,11 +24,16 @@ const Events = () => {
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [showCategoryFilter, setShowCategoryFilter] = useState(false);
   const [showDateFilter, setShowDateFilter] = useState(false);
+  const [showSearchFilter, setShowSearchFilter] = useState(false);
   const [deletingId, setDeletingId] = useState<number | null>(null);
 
   const [selectedEventId, setSelectedEventId] = useState<number | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<EventCategory>('all');
   const [dateRange, setDateRange] = useState({ startDate: '', endDate: '' });
+  const [searchQuery, setSearchQuery] = useState('');
+
+  // Ref для debounce
+  const searchTimeoutRef = useRef<number | null>(null);
 
   // controlled map state
   const [mapCenter, setMapCenter] = useState<[number, number]>(DEFAULT_CENTER);
@@ -62,6 +68,31 @@ const Events = () => {
       setLoading(false);
     }
   };
+
+  // ---------- search with debounce ----------
+  const handleSearchChange = useCallback((value: string) => {
+    setSearchQuery(value);
+    
+    // Очищаем предыдущий таймаут
+    if (searchTimeoutRef.current) {
+      window.clearTimeout(searchTimeoutRef.current);
+    }
+    
+    // Устанавливаем новый таймаут для debounce (500ms)
+    searchTimeoutRef.current = window.setTimeout(() => {
+      // Триггерим фильтрацию через изменение состояния
+      // Фильтрация произойдет в useEffect ниже
+    }, 750);
+  }, []);
+
+  // Очищаем таймаут при размонтировании
+  useEffect(() => {
+    return () => {
+      if (searchTimeoutRef.current) {
+        window.clearTimeout(searchTimeoutRef.current);
+      }
+    };
+  }, []);
 
   // ---------- filter events ----------
   useEffect(() => {
@@ -99,9 +130,18 @@ const Events = () => {
       });
     }
 
+    // Фильтр по поисковому запросу
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase().trim();
+      filtered = filtered.filter(event => 
+        event.title.toLowerCase().includes(query) || 
+        event.description.toLowerCase().includes(query)
+      );
+    }
+
     setFilteredEvents(filtered);
     setSelectedEventId(null); // Сбрасываем выбранное мероприятие при смене фильтра
-  }, [selectedCategory, dateRange, events]);
+  }, [selectedCategory, dateRange, searchQuery, events]);
 
   // ---------- helpers ----------
   const eventsWithValidCoordinates = useMemo(() => {
@@ -221,6 +261,11 @@ const Events = () => {
     setDateRange({ startDate: '', endDate: '' });
   }, []);
 
+  // ---------- search filter ----------
+  const handleClearSearchFilter = useCallback(() => {
+    setSearchQuery('');
+  }, []);
+
   const handleLogout = () => {
     storage.clear();
     navigate('/');
@@ -255,13 +300,16 @@ const Events = () => {
 
             <div className={styles.pageActions}>
               <button onClick={() => setShowCategoryFilter(v => !v)}>
-                {showCategoryFilter ? 'Скрыть категории' : 'Фильтр по категориям'}
+                {showCategoryFilter ? 'Скрыть категории' : 'Категории'}
               </button>
               <button onClick={() => setShowDateFilter(v => !v)}>
-                {showDateFilter ? 'Скрыть даты' : 'Фильтр по дате'}
+                {showDateFilter ? 'Скрыть даты' : 'Даты'}
+              </button>
+              <button onClick={() => setShowSearchFilter(v => !v)}>
+                {showSearchFilter ? 'Скрыть поиск' : 'Поиск'}
               </button>
               <button onClick={() => setShowCreateForm(v => !v)}>
-                {showCreateForm ? 'Скрыть форму' : '+ Создать мероприятие'}
+                {showCreateForm ? 'Скрыть форму' : '+ Создать'}
               </button>
             </div>
           </div>
@@ -374,6 +422,47 @@ const Events = () => {
             </div>
           )}
 
+          {showSearchFilter && (
+            <div className={styles.filterContainer}>
+              <div className={styles.filterHeader}>
+                <h3>Поиск мероприятий</h3>
+                {searchQuery && (
+                  <button 
+                    onClick={handleClearSearchFilter}
+                    className={styles.clearButton}
+                  >
+                    Сбросить поиск
+                  </button>
+                )}
+              </div>
+              
+              <div className={styles.searchInput}>
+                <label htmlFor="search">Поиск по названию и описанию:</label>
+                <input
+                  type="text"
+                  id="search"
+                  value={searchQuery}
+                  onChange={(e) => handleSearchChange(e.target.value)}
+                  placeholder="Введите текст для поиска..."
+                />
+                <div className={styles.searchInfo}>
+                  {searchQuery ? (
+                    <span className={styles.searching}></span>
+                  ) : (
+                    <span className={styles.searchHint}>Поск по названию и описанию мероприятий</span>
+                  )}
+                </div>
+              </div>
+              
+              {searchQuery && (
+                <div className={styles.selectedInfo}>
+                  <span>Поисковый запрос: </span>
+                  <strong>"{searchQuery}"</strong>
+                </div>
+              )}
+            </div>
+          )}
+
           <div className={styles.layout}>
             {/* -------- list -------- */}
             <div className={styles.eventsList}>
@@ -381,7 +470,7 @@ const Events = () => {
                 <div>Загрузка мероприятий...</div>
               ) : filteredEvents.length === 0 ? (
                 <div className={styles.emptyState}>
-                  {selectedCategory === 'all' && !dateRange.startDate && !dateRange.endDate ? (
+                  {!selectedCategory && !dateRange.startDate && !dateRange.endDate && !searchQuery ? (
                     <p>Мероприятий пока нет</p>
                   ) : (
                     <p>Мероприятий по выбранным фильтрам не найдено</p>
