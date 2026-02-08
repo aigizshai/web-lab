@@ -12,17 +12,31 @@ import styles from './Events.module.scss';
 
 const DEFAULT_CENTER: [number, number] = [55.7558, 37.6173]; // Москва
 
+// Тип для категорий
+type EventCategory = 
+  | 'встреча'
+  | 'день рождения'
+  | 'праздник'
+  | 'концерт'
+  | 'лекция'
+  | 'выставка'
+  | 'другое'
+  | 'all';
+
 const Events = () => {
   const navigate = useNavigate();
 
   const [events, setEvents] = useState<Event[]>([]);
+  const [filteredEvents, setFilteredEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
   const [showCreateForm, setShowCreateForm] = useState(false);
+  const [showFilter, setShowFilter] = useState(false);
   const [deletingId, setDeletingId] = useState<number | null>(null);
 
   const [selectedEventId, setSelectedEventId] = useState<number | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<EventCategory>('all');
 
   // controlled map state
   const [mapCenter, setMapCenter] = useState<[number, number]>(DEFAULT_CENTER);
@@ -45,6 +59,7 @@ const Events = () => {
       setLoading(true);
       const data = await eventService.getEvents();
       setEvents(data);
+      setFilteredEvents(data); // Изначально показываем все
       setError('');
     } catch (err: any) {
       setError(
@@ -57,14 +72,29 @@ const Events = () => {
     }
   };
 
+  // ---------- filter events by category ----------
+  useEffect(() => {
+    if (selectedCategory === 'all') {
+      setFilteredEvents(events);
+    } else {
+      const filtered = events.filter(event => event.category === selectedCategory);
+      setFilteredEvents(filtered);
+    }
+    setSelectedEventId(null); // Сбрасываем выбранное мероприятие при смене фильтра
+  }, [selectedCategory, events]);
+
   // ---------- helpers ----------
   const eventsWithValidCoordinates = useMemo(() => {
-    return events.filter(e => parseCoordinates(e.location));
-  }, [events]);
+    return filteredEvents.filter(e => parseCoordinates(e.location));
+  }, [filteredEvents]);
 
-  // Центрируем карту по всем событиям при загрузке
+  // Центрируем карту по отфильтрованным событиям
   useEffect(() => {
-    if (eventsWithValidCoordinates.length === 0) return;
+    if (eventsWithValidCoordinates.length === 0) {
+      setMapCenter(DEFAULT_CENTER);
+      setMapZoom(10);
+      return;
+    }
 
     const coords = eventsWithValidCoordinates.map(
       e => parseCoordinates(e.location)!
@@ -78,6 +108,13 @@ const Events = () => {
     setMapCenter([avgLat, avgLng]);
     setMapZoom(10);
   }, [eventsWithValidCoordinates]);
+
+  // Получаем уникальные категории из мероприятий
+  const categories = useMemo(() => {
+    const allCategories = events.map(event => event.category);
+    const uniqueCategories = [...new Set(allCategories)];
+    return uniqueCategories.filter(cat => cat !== 'all').sort();
+  }, [events]);
 
   // ---------- actions ----------
   const handleCreateEvent = async (data: any) => {
@@ -133,6 +170,11 @@ const Events = () => {
     element?.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }, []);
 
+  // ---------- category filter ----------
+  const handleCategoryChange = useCallback((category: EventCategory) => {
+    setSelectedCategory(category);
+  }, []);
+
   const handleLogout = () => {
     storage.clear();
     navigate('/');
@@ -159,15 +201,20 @@ const Events = () => {
 
           <div className={styles.pageHeader}>
             <div>
-              <h2>Мероприятия ({events.length})</h2>
+              <h2>Мероприятия ({filteredEvents.length})</h2>
               <p>
-                На карте: {eventsWithValidCoordinates.length} из {events.length}
+                На карте: {eventsWithValidCoordinates.length} из {filteredEvents.length}
               </p>
             </div>
 
-            <button onClick={() => setShowCreateForm(v => !v)}>
-              {showCreateForm ? 'Скрыть форму' : '+ Создать мероприятие'}
-            </button>
+            <div className={styles.pageActions}>
+              <button onClick={() => setShowFilter(v => !v)}>
+                {showFilter ? 'Скрыть фильтр' : 'Фильтр по категориям'}
+              </button>
+              <button onClick={() => setShowCreateForm(v => !v)}>
+                {showCreateForm ? 'Скрыть форму' : '+ Создать мероприятие'}
+              </button>
+            </div>
           </div>
 
           {showCreateForm && (
@@ -178,16 +225,69 @@ const Events = () => {
             />
           )}
 
+          {showFilter && (
+            <div className={styles.filterContainer}>
+              <div className={styles.filterHeader}>
+                <h3>Фильтр по категориям</h3>
+                {selectedCategory !== 'all' && (
+                  <button 
+                    onClick={() => handleCategoryChange('all')}
+                    className={styles.clearButton}
+                  >
+                    Сбросить фильтр
+                  </button>
+                )}
+              </div>
+              
+              <div className={styles.categories}>
+                <button
+                  key="all"
+                  onClick={() => handleCategoryChange('all')}
+                  className={`${styles.categoryButton} ${
+                    selectedCategory === 'all' ? styles.active : ''
+                  }`}
+                >
+                  Все категории
+                </button>
+                
+                {categories.map((category) => (
+                  <button
+                    key={category}
+                    onClick={() => handleCategoryChange(category)}
+                    className={`${styles.categoryButton} ${
+                      selectedCategory === category ? styles.active : ''
+                    }`}
+                  >
+                    {category}
+                  </button>
+                ))}
+              </div>
+              
+              {selectedCategory !== 'all' && (
+                <div className={styles.selectedInfo}>
+                  <span>Выбрана категория: </span>
+                  <strong>{selectedCategory}</strong>
+                </div>
+              )}
+            </div>
+          )}
+
           <div className={styles.layout}>
             {/* -------- list -------- */}
             <div className={styles.eventsList}>
               {loading ? (
                 <div>Загрузка мероприятий...</div>
-              ) : events.length === 0 ? (
-                <div>Мероприятий пока нет</div>
+              ) : filteredEvents.length === 0 ? (
+                <div className={styles.emptyState}>
+                  {selectedCategory === 'all' ? (
+                    <p>Мероприятий пока нет</p>
+                  ) : (
+                    <p>В категории "{selectedCategory}" мероприятий не найдено</p>
+                  )}
+                </div>
               ) : (
                 <div className={styles.eventsGrid}>
-                  {events.map(event => (
+                  {filteredEvents.map(event => (
                     <div
                       key={event.id}
                       id={`event-${event.id}`}
