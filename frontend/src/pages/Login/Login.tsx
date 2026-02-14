@@ -37,7 +37,7 @@ const Login = () => {
       const response = await authService.login(formData);
       storage.setToken(response.accessToken);
       // В реальном приложении здесь нужно декодировать токен или получить пользователя с сервера
-      storage.setUser({ email: formData.email });
+      storage.setUser({ email: formData.email});
       navigate('/events');
     } catch (err: any) {
       setError(err.response?.data?.message || 'Ошибка авторизации');
@@ -68,6 +68,7 @@ const Login = () => {
               onChange={handleChange}
               required
               disabled={loading}
+              className="form-control"
             />
           </div>
 
@@ -84,8 +85,8 @@ const Login = () => {
             />
           </div>
 
-          <button type="submit" disabled={loading}>
-            {loading ? 'Вход...' : 'Войти'}
+          <button type="submit" disabled={loading} className="btn btn-primary">
+              {loading ? 'Вход...' : 'Войти'}
           </button>
         </form>
 

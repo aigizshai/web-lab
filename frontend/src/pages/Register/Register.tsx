@@ -94,6 +94,7 @@ const Register = () => {
               onChange={handleChange}
               required
               disabled={loading}
+              className="form-control"
             />
           </div>
 
@@ -123,9 +124,9 @@ const Register = () => {
             />
           </div>
 
-          <button type="submit" disabled={loading}>
-            {loading ? 'Регистрация...' : 'Зарегистрироваться'}
-          </button>
+          <button type="submit" disabled={loading} className="btn btn-primary">
+             {loading ? 'Вход...' : 'Войти'}
+</        button>
         </form>
 
         <div className={styles.links}>

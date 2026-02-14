@@ -1,4 +1,6 @@
 // src/pages/Events/components/EventCard/EventCard.module.scss
+@use '../../../../styles/global.scss' as *;
+
 .eventCard {
   background-color: var(--light-color);
   border-radius: var(--radius-lg);
@@ -18,7 +20,7 @@
 
   &.selected {
     border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+    box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
   }
 
   .header {
@@ -67,7 +69,7 @@
       }
 
       .deleteButton:hover {
-        color: var(--accent-color);
+        color: var(--danger-color);
       }
     }
   }
@@ -80,6 +82,36 @@
     line-height: 1.5;
   }
 
+  .locationSection {
+    margin-bottom: var(--spacing-md);
+    
+    .locationHeader {
+      display: flex;
+      align-items: center;
+      margin-bottom: var(--spacing-xs);
+      
+      strong {
+        color: var(--text-color);
+        font-weight: 600;
+        font-size: var(--font-size-sm);
+      }
+    }
+    
+    .coordinates {
+      display: block;
+      background-color: var(--bg-secondary);
+      padding: var(--spacing-sm) var(--spacing-md);
+      border-radius: var(--radius-md);
+      font-family: 'Courier New', monospace;
+      font-size: var(--font-size-sm);
+      color: var(--text-color);
+      border: 1px solid var(--border-color);
+      overflow-x: auto;
+      white-space: nowrap;
+    }
+  }
+
+  // Блок категории и даты
   .details {
     display: flex;
     flex-wrap: wrap;
@@ -94,74 +126,15 @@
     }
 
     .category {
-      background-color: rgba(46, 204, 113, 0.1);
-      color: var(--secondary-dark);
+      background-color: rgba(67, 97, 238, 0.1);
+      color: var(--primary-color);
+      border: 1px solid rgba(67, 97, 238, 0.2);
     }
 
     .date {
-      background-color: rgba(52, 152, 219, 0.1);
-      color: var(--primary-dark);
-    }
-  }
-
-  .locationSection {
-    background-color: var(--bg-secondary);
-    border-radius: var(--radius-md);
-    padding: var(--spacing-md);
-    margin-bottom: var(--spacing-md);
-    border: 1px solid var(--border-color);
-
-    .locationHeader {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: var(--spacing-sm);
-
-      strong {
-        color: var(--text-color);
-        font-weight: 600;
-      }
-
-      .coordinatesValid {
-        color: var(--secondary-color);
-        font-size: var(--font-size-sm);
-        font-weight: 500;
-      }
-
-      .coordinatesInvalid {
-        color: var(--accent-color);
-        font-size: var(--font-size-sm);
-        font-weight: 500;
-      }
-    }
-
-    .locationDetails {
-      .coordinates {
-        display: block;
-        background-color: var(--light-color);
-        padding: var(--spacing-sm);
-        border-radius: var(--radius-sm);
-        font-family: 'Courier New', monospace;
-        font-size: var(--font-size-sm);
-        color: var(--text-color);
-        margin-bottom: var(--spacing-sm);
-        border: 1px solid var(--border-color);
-        overflow-x: auto;
-      }
-
-      .coordinatesParsed {
-        display: flex;
-        gap: var(--spacing-md);
-        font-size: var(--font-size-sm);
-        color: var(--text-secondary);
-
-        span {
-          padding: var(--spacing-xs) var(--spacing-sm);
-          background-color: var(--light-color);
-          border-radius: var(--radius-sm);
-          border: 1px solid var(--border-color);
-        }
-      }
+      background-color: rgba(114, 9, 183, 0.1);
+      color: var(--secondary-color);
+      border: 1px solid rgba(114, 9, 183, 0.2);
     }
   }
 
@@ -170,10 +143,10 @@
     justify-content: space-between;
     align-items: center;
     color: var(--text-light);
-    font-size: var(--font-size-sm);
+    font-size: var(--font-size-xs);
     border-top: 1px solid var(--border-color);
     padding-top: var(--spacing-sm);
-    margin-top: var(--spacing-sm);
+    margin-top: auto;
 
     .creator, .id {
       padding: var(--spacing-xs) var(--spacing-sm);
@@ -183,4 +156,118 @@
   }
 }
 
-// ... остальные стили для модального окна остаются без изменений
+// Стили для модального окна удаления
+.deleteModal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+
+  .modalOverlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+
+  .modalContent {
+    position: relative;
+    background-color: var(--light-color);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    padding: var(--spacing-xl);
+    width: 90%;
+    max-width: 400px;
+    z-index: 2001;
+
+    h4 {
+      color: var(--text-color);
+      margin-bottom: var(--spacing-md);
+      font-size: var(--font-size-lg);
+      font-weight: 600;
+    }
+
+    p {
+      color: var(--text-color);
+      margin-bottom: var(--spacing-lg);
+      line-height: 1.5;
+
+      strong {
+        color: var(--primary-color);
+      }
+    }
+
+    .modalActions {
+      display: flex;
+      gap: var(--spacing-md);
+
+      button {
+        flex: 1;
+        padding: var(--spacing-md);
+        border: none;
+        border-radius: var(--radius-md);
+        font-size: var(--font-size-md);
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+
+        &:disabled {
+          opacity: 0.6;
+          cursor: not-allowed;
+        }
+      }
+
+      .confirmDelete {
+        background-color: var(--danger-color);
+        color: var(--light-color);
+
+        &:hover:not(:disabled) {
+          background-color: #c1121f;
+          transform: translateY(-2px);
+        }
+      }
+
+      .cancelDelete {
+        background-color: transparent;
+        border: 2px solid var(--border-color);
+        color: var(--text-secondary);
+
+        &:hover:not(:disabled) {
+          border-color: var(--primary-color);
+          color: var(--primary-color);
+          background-color: rgba(67, 97, 238, 0.05);
+        }
+      }
+    }
+  }
+}
+
+// Адаптивность
+@media (max-width: 768px) {
+  .eventCard {
+    padding: var(--spacing-md);
+    
+    .header {
+      flex-direction: column;
+      gap: var(--spacing-sm);
+      
+      .actions {
+        margin-left: 0;
+        align-self: flex-end;
+      }
+    }
+    
+    .footer {
+      flex-direction: column;
+      gap: var(--spacing-sm);
+      align-items: flex-start;
+    }
+  }
+}

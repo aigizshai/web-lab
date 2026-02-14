@@ -1,192 +1,29 @@
 /* src/index.css */
-:root {
-    /* Цветовая палитра */
-    --primary-color: #3498db;
-    --primary-dark: #2980b9;
-    --secondary-color: #2ecc71;
-    --secondary-dark: #27ae60;
-    --accent-color: #e74c3c;
-    --accent-dark: #c0392b;
-    
-    /* Нейтральные цвета */
-    --light-color: #ffffff;
-    --bg-color: #f8f9fa;
-    --bg-secondary: #e9ecef;
-    --border-color: #dee2e6;
-    --text-color: #333333;
-    --text-secondary: #6c757d;
-    --text-light: #868e96;
-    
-    /* Тени */
-    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
-    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
-    --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
-    
-    /* Скругления */
-    --radius-sm: 4px;
-    --radius-md: 8px;
-    --radius-lg: 12px;
-    
-    /* Отступы */
-    --spacing-xs: 4px;
-    --spacing-sm: 8px;
-    --spacing-md: 16px;
-    --spacing-lg: 24px;
-    --spacing-xl: 32px;
-    
-    /* Шрифты */
-    --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-      'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
-    --font-size-sm: 14px;
-    --font-size-md: 16px;
-    --font-size-lg: 18px;
-    --font-size-xl: 24px;
-    --font-size-2xl: 32px;
-  }
-  
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
-  
-  body {
-    font-family: var(--font-family);
-    font-size: var(--font-size-md);
-    line-height: 1.6;
-    color: var(--text-color);
-    background-color: var(--bg-color);
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-  }
-  
-  a {
-    color: var(--primary-color);
-    text-decoration: none;
-  }
-  
-  a:hover {
-    text-decoration: underline;
-  }
-  button {
-    padding: var(--spacing-sm) var(--spacing-lg);
-    border: none;
-    border-radius: var(--radius-md);
-    font-size: var(--font-size-md);
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: var(--spacing-sm);
-  
-    &:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-    }
-  
-    &Primary {
-      background-color: var(--primary-color);
-      color: var(--light-color);
-  
-      &:hover:not(:disabled) {
-        background-color: var(--primary-dark);
-        transform: translateY(-2px);
-        box-shadow: var(--shadow-md);
-      }
-    }
-  
-    &Secondary {
-      background-color: var(--secondary-color);
-      color: var(--light-color);
-  
-      &:hover:not(:disabled) {
-        background-color: var(--secondary-dark);
-        transform: translateY(-2px);
-        box-shadow: var(--shadow-md);
-      }
-    }
-  
-    &Outline {
-      background-color: transparent;
-      border: 2px solid var(--primary-color);
-      color: var(--primary-color);
-  
-      &:hover:not(:disabled) {
-        background-color: var(--primary-color);
-        color: var(--light-color);
-        transform: translateY(-2px);
-        box-shadow: var(--shadow-md);
-      }
-    }
-  
-    &Ghost {
-      background-color: transparent;
-      border: 2px solid var(--border-color);
-      color: var(--text-secondary);
-  
-      &:hover:not(:disabled) {
-        border-color: var(--primary-color);
-        color: var(--primary-color);
-        transform: translateY(-2px);
-      }
-    }
-  
-    &Small {
-      padding: var(--spacing-xs) var(--spacing-md);
-      font-size: var(--font-size-sm);
-    }
-  
-    &Large {
-      padding: var(--spacing-md) var(--spacing-xl);
-      font-size: var(--font-size-lg);
-    }
-  
-    &FullWidth {
-      width: 100%;
-    }
-  }
-  /* Общие классы */
-  .container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 var(--spacing-md);
-  }
-  
-  .error-message {
-    background-color: #fee;
-    border: 1px solid #fcc;
-    color: var(--accent-color);
-    padding: var(--spacing-md);
-    border-radius: var(--radius-md);
-    margin-bottom: var(--spacing-lg);
-  }
-  
-  .success-message {
-    background-color: #efe;
-    border: 1px solid #cfc;
-    color: var(--secondary-color);
-    padding: var(--spacing-md);
-    border-radius: var(--radius-md);
-    margin-bottom: var(--spacing-lg);
-  }
-  
-  .loading {
-    text-align: center;
-    padding: var(--spacing-xl);
-    color: var(--text-secondary);
-  }
-  
-  /* Адаптивность */
-  @media (max-width: 768px) {
-    .container {
-      padding: 0 var(--spacing-sm);
-    }
-  }
-  
-  @media (max-width: 480px) {
-    body {
-      font-size: var(--font-size-sm);
-    }
-  }
+@import './styles/global.scss';
+
+/* Дополнительные глобальные стили */
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Кастомные стили для скроллбара */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-secondary);
+  border-radius: var(--radius-full);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--text-light);
+  border-radius: var(--radius-full);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-secondary);
+}

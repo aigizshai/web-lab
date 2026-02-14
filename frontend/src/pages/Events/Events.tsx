@@ -274,45 +274,72 @@ const Events = () => {
   // ---------- render ----------
   return (
     <div className={styles.events}>
-      <header className={styles.header}>
-        <div className={styles.container}>
-          <h1>Мероприятия</h1>
-
-          <div className={styles.authInfo}>
-            <span>ID пользователя: {userId}</span>
-            <button onClick={() => navigate('/')}>Главная</button>
-            <button onClick={handleLogout}>Выйти</button>
+      <header className={`${styles.header} container`}>
+        <div className={styles.headerContent}>
+          <div className={styles.headerLeft}>
+            <button 
+              onClick={() => navigate('/')}
+              className="btn btn-ghost"
+            >
+              ← На главную
+            </button>
+            <h1>Мероприятия</h1>
+          </div>
+          
+          <div className={styles.headerRight}>
+            <span className={styles.userInfo}>
+              Пользователь ID: {userId}
+            </span>
+            <button 
+              onClick={handleLogout}
+              className="btn btn-outline"
+            >
+              Выйти
+            </button>
           </div>
         </div>
       </header>
 
-      <main className={styles.main}>
+
+      <main className={`${styles.main} container`}>
         <div className={styles.container}>
           {error && <div className={styles.error}>{error}</div>}
 
           <div className={styles.pageHeader}>
-            <div>
-              <h2>Мероприятия ({filteredEvents.length})</h2>
-              <p>
-                На карте: {eventsWithValidCoordinates.length} из {filteredEvents.length}
-              </p>
-            </div>
-
-            <div className={styles.pageActions}>
-              <button onClick={() => setShowCategoryFilter(v => !v)}>
-                {showCategoryFilter ? 'Скрыть категории' : 'Категории'}
-              </button>
-              <button onClick={() => setShowDateFilter(v => !v)}>
-                {showDateFilter ? 'Скрыть даты' : 'Даты'}
-              </button>
-              <button onClick={() => setShowSearchFilter(v => !v)}>
-                {showSearchFilter ? 'Скрыть поиск' : 'Поиск'}
-              </button>
-              <button onClick={() => setShowCreateForm(v => !v)}>
-                {showCreateForm ? 'Скрыть форму' : '+ Создать'}
-              </button>
-            </div>
+          <div>
+            <h2>Мероприятия</h2>
+            <p className={styles.eventsCount}>
+              Всего: {filteredEvents.length} | На карте: {eventsWithValidCoordinates.length}
+            </p>
           </div>
+
+          <div className={styles.pageActions}>
+            <button 
+              onClick={() => setShowCategoryFilter(v => !v)}
+              className={`btn ${showCategoryFilter ? 'btn-primary' : 'btn-outline'}`}
+            >
+              {showCategoryFilter ? '▼ Категории' : '▲ Категории'}
+            </button>
+            <button 
+              onClick={() => setShowDateFilter(v => !v)}
+              className={`btn ${showDateFilter ? 'btn-primary' : 'btn-outline'}`}
+            >
+              {showDateFilter ? '▼ Даты' : '▲ Даты'}
+            </button>
+            <button 
+              onClick={() => setShowSearchFilter(v => !v)}
+              className={`btn ${showSearchFilter ? 'btn-primary' : 'btn-outline'}`}
+            >
+              {showSearchFilter ? '▼ Поиск' : '▲ Поиск'}
+            </button>
+            <button 
+              onClick={() => setShowCreateForm(v => !v)}
+              className={`btn ${showCreateForm ? 'btn-secondary' : 'btn-primary'}`}
+            >
+              {showCreateForm ? '✕ Отмена' : '+ Создать'}
+            </button>
+          </div>
+        </div>
 
           {showCreateForm && (
             <CreateEventForm
@@ -329,7 +356,7 @@ const Events = () => {
                 {selectedCategory !== 'all' && (
                   <button 
                     onClick={() => handleCategoryChange('all')}
-                    className={styles.clearButton}
+                    className="btn btn-sm btn-ghost"
                   >
                     Сбросить фильтр
                   </button>
@@ -340,9 +367,7 @@ const Events = () => {
                 <button
                   key="all"
                   onClick={() => handleCategoryChange('all')}
-                  className={`${styles.categoryButton} ${
-                    selectedCategory === 'all' ? styles.active : ''
-                  }`}
+                  className={`btn btn-sm ${selectedCategory === 'all' ? 'btn-primary' : 'btn-outline'}`}
                 >
                   Все категории
                 </button>
@@ -351,9 +376,7 @@ const Events = () => {
                   <button
                     key={category}
                     onClick={() => handleCategoryChange(category)}
-                    className={`${styles.categoryButton} ${
-                      selectedCategory === category ? styles.active : ''
-                    }`}
+                    className={`btn btn-sm ${selectedCategory === category ? 'btn-primary' : 'btn-outline'}`}
                   >
                     {category}
                   </button>

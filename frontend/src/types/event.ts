@@ -4,7 +4,7 @@ export interface Event {
     title: string;
     description: string;
     date: string;
-    category: string;
+    category: EventCategory;
     location: string;
     createdBy: number;
     coordinates?: {
@@ -20,6 +20,23 @@ export interface Event {
     location: string;
     createdBy: number;
   }
+  export type EventCategory = 
+  | 'встреча'
+  | 'день рождения'
+  | 'праздник'
+  | 'концерт'
+  | 'лекция'
+  | 'выставка'
+  | 'другое'
+  | 'all';
+
+export interface EventFilters {
+  category?: EventCategory | 'all';
+  search?: string;
+  startDate?: string;
+  endDate?: string;
+}
+
   export interface User {
     id: number;
     name: string;

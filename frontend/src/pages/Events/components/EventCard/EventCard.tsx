@@ -1,7 +1,6 @@
 // src/pages/Events/components/EventCard/EventCard.tsx
 import { useState } from 'react';
 import type { Event } from '../../../../types/event';
-import { parseCoordinates } from '../../../../utils/coordinates';
 import styles from './EventCard.module.scss';
 
 interface EventCardProps {
@@ -10,11 +9,11 @@ interface EventCardProps {
   onShowOnMap: (event: Event) => void;
   canDelete: boolean;
   isSelected?: boolean;
+  deleting: boolean;
 }
 
 const EventCard = ({ event, onDelete, onShowOnMap, canDelete, isSelected }: EventCardProps) => {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-  const coords = parseCoordinates(event.location);
 
   const handleDelete = () => {
     setShowDeleteConfirm(true);
@@ -65,6 +64,13 @@ const EventCard = ({ event, onDelete, onShowOnMap, canDelete, isSelected }: Even
         
         <p className={styles.description}>{event.description}</p>
         
+        <div className={styles.locationSection}>
+          <div className={styles.locationHeader}>
+            <strong>Локация:</strong>
+                  <code className={styles.coordinates}>{event.location}</code>
+          </div>
+        </div>
+
         <div className={styles.details}>
           <span className={styles.category}>{event.category}</span>
           <span className={styles.date}>
@@ -74,30 +80,6 @@ const EventCard = ({ event, onDelete, onShowOnMap, canDelete, isSelected }: Even
               year: 'numeric'
             })}
           </span>
-        </div>
-
-        <div className={styles.locationSection}>
-          <div className={styles.locationHeader}>
-            <strong>Локация:</strong>
-            {coords ? (
-              <span className={styles.coordinatesValid}>
-                ✓ Координаты валидны
-              </span>
-            ) : (
-              <span className={styles.coordinatesInvalid}>
-                ⚠ Некорректный формат
-              </span>
-            )}
-          </div>
-          <div className={styles.locationDetails}>
-            <code className={styles.coordinates}>{event.location}</code>
-            {coords && (
-              <div className={styles.coordinatesParsed}>
-                <span>Широта: {coords.lat.toFixed(6)}</span>
-                <span>Долгота: {coords.lng.toFixed(6)}</span>
-              </div>
-            )}
-          </div>
         </div>
         
         <div className={styles.footer}>
