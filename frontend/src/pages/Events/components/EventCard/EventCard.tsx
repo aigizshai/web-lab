@@ -1,7 +1,10 @@
 // src/pages/Events/components/EventCard/EventCard.tsx
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import type { Event } from '../../../../types/event';
 import styles from './EventCard.module.scss';
+import { parseCoordinates } from '../../../../utils/coordinates';
+
 
 interface EventCardProps {
   event: Event;
@@ -9,11 +12,13 @@ interface EventCardProps {
   onShowOnMap: (event: Event) => void;
   canDelete: boolean;
   isSelected?: boolean;
-  deleting: boolean;
+  deleting?: boolean; // добавим для индикации удаления
 }
 
-const EventCard = ({ event, onDelete, onShowOnMap, canDelete, isSelected }: EventCardProps) => {
+const EventCard = ({ event, onDelete, onShowOnMap, canDelete, isSelected, deleting }: EventCardProps) => {
+  const navigate = useNavigate();
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const coords = parseCoordinates(event.location);
 
   const handleDelete = () => {
     setShowDeleteConfirm(true);
@@ -30,6 +35,10 @@ const EventCard = ({ event, onDelete, onShowOnMap, canDelete, isSelected }: Even
 
   const handleShowOnMap = () => {
     onShowOnMap(event);
+  };
+
+  const handleEdit = () => {
+    navigate(`/events/edit/${event.id}`);
   };
 
   return (
@@ -49,15 +58,31 @@ const EventCard = ({ event, onDelete, onShowOnMap, canDelete, isSelected }: Even
               </svg>
             </button>
             {canDelete && (
-              <button
-                onClick={handleDelete}
-                className={styles.deleteButton}
-                title="Удалить мероприятие"
-              >
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2" />
-                </svg>
-              </button>
+              <>
+                <button
+                  onClick={handleEdit}
+                  className={styles.editButton}
+                  title="Редактировать"
+                >
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z" />
+                  </svg>
+                </button>
+                <button
+                  onClick={handleDelete}
+                  className={styles.deleteButton}
+                  title="Удалить мероприятие"
+                  disabled={deleting}
+                >
+                  {deleting ? (
+                    <span>...</span>
+                  ) : (
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2" />
+                    </svg>
+                  )}
+                </button>
+              </>
             )}
           </div>
         </div>
@@ -67,8 +92,8 @@ const EventCard = ({ event, onDelete, onShowOnMap, canDelete, isSelected }: Even
         <div className={styles.locationSection}>
           <div className={styles.locationHeader}>
             <strong>Локация:</strong>
-                  <code className={styles.coordinates}>{event.location}</code>
           </div>
+          <code className={styles.coordinates}>{event.location}</code>
         </div>
 
         <div className={styles.details}>

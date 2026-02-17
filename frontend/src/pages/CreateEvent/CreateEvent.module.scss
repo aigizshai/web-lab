@@ -1,0 +1,27 @@
+@use '../../styles/global.scss' as *;
+
+.page {
+  min-height: 100vh;
+  background-color: var(--bg-color);
+}
+
+.header {
+  background-color: var(--light-color);
+  box-shadow: var(--shadow-md);
+  padding: var(--spacing-md) 0;
+  margin-bottom: var(--spacing-xl);
+
+  h1 {
+    font-size: var(--font-size-xl);
+    color: var(--primary-color);
+    text-align: center;
+  }
+}
+
+.main {
+  padding: 0 var(--spacing-md) var(--spacing-xl);
+
+  .error {
+    margin-top: var(--spacing-lg);
+  }
+}

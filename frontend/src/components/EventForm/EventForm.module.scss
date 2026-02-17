@@ -1,0 +1,63 @@
+@use '../../styles/global.scss' as *;
+
+.form {
+  @extend .card;
+  padding: var(--spacing-xl);
+  
+  .formGroup {
+    margin-bottom: var(--spacing-lg);
+    
+    label {
+      display: block;
+      margin-bottom: var(--spacing-xs);
+      font-weight: 500;
+      color: var(--text-color);
+    }
+    
+    input, textarea, select {
+      width: 100%;
+      padding: var(--spacing-md);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      font-size: var(--font-size-md);
+      
+      &:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+      }
+      
+      &:disabled {
+        background-color: var(--bg-secondary);
+        cursor: not-allowed;
+      }
+    }
+    
+    .error {
+      display: block;
+      margin-top: var(--spacing-xs);
+      color: var(--danger-color);
+      font-size: var(--font-size-sm);
+    }
+  }
+  
+  .formRow {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-md);
+    
+    @media (max-width: 768px) {
+      grid-template-columns: 1fr;
+    }
+  }
+  
+  .formActions {
+    display: flex;
+    gap: var(--spacing-md);
+    margin-top: var(--spacing-xl);
+    
+    button {
+      flex: 1;
+    }
+  }
+}

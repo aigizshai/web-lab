@@ -55,6 +55,8 @@ export interface EventFilters {
   }
   
   export interface AuthResponse {
+    name: string;
     accessToken: string;
     refreshToken: string;
+    id: number;
   }

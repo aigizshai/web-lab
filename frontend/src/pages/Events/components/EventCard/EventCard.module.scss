@@ -67,7 +67,11 @@
       .mapButton:hover {
         color: var(--primary-color);
       }
-
+      .editButton {
+        &:hover {
+          color: var(--secondary-color);
+        }
+      }
       .deleteButton:hover {
         color: var(--danger-color);
       }

@@ -71,6 +71,48 @@
     box-sizing: border-box;
   }
   
+  .header {
+    background-color: var(--light-color);
+    box-shadow: var(--shadow-md);
+    padding: var(--spacing-md) 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    
+    .headerContent {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      
+      .headerLeft {
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-md);
+        
+        h1 {
+          font-size: var(--font-size-xl);
+          color: var(--primary-color);
+          font-weight: 700;
+        }
+      }
+      
+      .headerRight {
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-lg);
+        
+        .userInfo {
+          color: var(--text-secondary);
+          font-size: var(--font-size-sm);
+          font-weight: 500;
+          padding: var(--spacing-xs) var(--spacing-md);
+          background-color: var(--bg-secondary);
+          border-radius: var(--radius-md);
+        }
+      }
+    }
+  }
+  
   body {
     font-family: var(--font-family);
     font-size: var(--font-size-md);

@@ -1,0 +1,98 @@
+@use '../../styles/global.scss' as *;
+
+.profile {
+  min-height: 100vh;
+  background-color: var(--bg-color);
+}
+
+.header {
+  background-color: var(--light-color);
+  box-shadow: var(--shadow-md);
+  padding: var(--spacing-md) 0;
+  
+  .headerContent {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--spacing-md);
+    
+    .headerLeft {
+      display: flex;
+      gap: var(--spacing-sm);
+      
+      button {
+        white-space: nowrap;
+      }
+    }
+    
+    .headerRight {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-lg);
+      
+      h1 {
+        font-size: var(--font-size-xl);
+        color: var(--primary-color);
+        margin: 0;
+      }
+    }
+  }
+}
+
+.main {
+  padding: var(--spacing-xl) 0;
+  
+  .userInfo {
+    @extend .card;
+    padding: var(--spacing-lg);
+    margin-bottom: var(--spacing-xl);
+    
+    h2 {
+      font-size: var(--font-size-lg);
+      margin-bottom: var(--spacing-md);
+    }
+    
+    p {
+      margin-bottom: var(--spacing-sm);
+    }
+  }
+  
+  .userEvents {
+    h2 {
+      font-size: var(--font-size-lg);
+      margin-bottom: var(--spacing-lg);
+    }
+    
+    .empty {
+      text-align: center;
+      color: var(--text-secondary);
+      padding: var(--spacing-xl);
+    }
+    
+    .eventsGrid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: var(--spacing-lg);
+    }
+  }
+}
+
+// Адаптивность
+@media (max-width: 768px) {
+  .header {
+    .headerContent {
+      flex-direction: column;
+      align-items: stretch;
+      
+      .headerLeft {
+        justify-content: center;
+      }
+      
+      .headerRight {
+        justify-content: space-between;
+        width: 100%;
+      }
+    }
+  }
+}
