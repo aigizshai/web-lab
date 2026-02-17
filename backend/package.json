@@ -6,8 +6,7 @@
   "scripts": {
     "build": "tsc",
     "start": "node dist/index.js",
-    "dev": "ts-node src/index.ts",
-    "dev:watch": "nodemon --exec ts-node src/index.ts",
+    "dev": "nodemon --exec ts-node src/index.ts",
     "lint": "eslint src/**/*.ts",
     "format": "prettier --write src/**/*.ts",
     "check": "tsc --noEmit && eslint src/**/*.ts",
@@ -21,11 +20,11 @@
     ]
   },
   "_moduleAliases": {
-    "@configs": "./dist/configs",
-    "@models": "./dist/models",
-    "@routes": "./dist/routes",
-    "@middlewares": "./dist/middlewares",
-    "@swagger": "./dist/swagger"
+    "@configs": "./src/configs",
+    "@models": "./src/models",
+    "@routes": "./src/routes",
+    "@middlewares": "./src/middlewares",
+    "@swagger": "./src/swagger"
   },
   "keywords": [],
   "author": "",
