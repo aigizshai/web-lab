@@ -19,6 +19,10 @@ class User
   public email!: string;
   public password!: string;
   public createdAt!: Date;
+
+  public async comparePassword(candidatePassword: string): Promise<boolean> {
+    return bcrypt.compare(candidatePassword, this.password);
+  }
 }
 
 User.init(
