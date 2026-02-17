@@ -37,11 +37,15 @@ export interface EventFilters {
   endDate?: string;
 }
 
-  export interface User {
-    id: number;
-    name: string;
-    email: string;
-  }
+export interface User {
+  id: number;
+  surname: string;
+  name: string;
+  patronymic: string;
+  gender: 'male' | 'female';
+  birthDate: string; // формат YYYY-MM-DD
+  email: string;
+}
   
   export interface LoginRequest {
     email: string;
@@ -49,12 +53,16 @@ export interface EventFilters {
   }
   
   export interface RegisterRequest {
+    surname: string;
     name: string;
+    patronymic: string;
+    gender: 'male' | 'female';
+    birthDate: string;
     email: string;
     password: string;
   }
   
-  export interface AuthResponse {
+  export interface LoginResponse {
     name: string;
     accessToken: string;
     refreshToken: string;

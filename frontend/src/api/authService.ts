@@ -1,9 +1,9 @@
 import axiosInstance from './axios';
-import type { LoginRequest, AuthResponse, RegisterRequest, User } from '../types/event';
+import type { LoginRequest, LoginResponse, RegisterRequest, User } from '../types/event';
 
 
 export const authService = {
-  login: async (data: LoginRequest): Promise<AuthResponse> => {
+  login: async (data: LoginRequest): Promise<LoginResponse> => {
     const response = await axiosInstance.post('/auth/login', data);
     return response.data;
   },
@@ -14,6 +14,11 @@ export const authService = {
 
   getProfile: async (): Promise<User> => {
     const response = await axiosInstance.get('/auth/profile');
+    return response.data;
+  },
+
+  updateProfile: async (userId: number, data: Partial<Omit<User, 'id' | 'email'>>): Promise<User> => {
+    const response = await axiosInstance.put(`/users/${userId}`, data);
     return response.data;
   },
 

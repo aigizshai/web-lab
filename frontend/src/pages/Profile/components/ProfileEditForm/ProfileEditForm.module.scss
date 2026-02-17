@@ -1,0 +1,76 @@
+@use '../../../../styles/global.scss' as *;
+
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+}
+
+.modal {
+  background-color: var(--light-color);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xl);
+  padding: var(--spacing-xl);
+  width: 90%;
+  max-width: 500px;
+  max-height: 90vh;
+  overflow-y: auto;
+
+  h3 {
+    margin-bottom: var(--spacing-lg);
+    color: var(--primary-color);
+  }
+
+  .formGroup {
+    margin-bottom: var(--spacing-md);
+
+    label {
+      display: block;
+      margin-bottom: var(--spacing-xs);
+      font-weight: 500;
+    }
+
+    input, select {
+      width: 100%;
+      padding: var(--spacing-sm) var(--spacing-md);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      font-size: var(--font-size-md);
+
+      &:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+      }
+
+      &:disabled {
+        background-color: var(--bg-secondary);
+        cursor: not-allowed;
+      }
+    }
+
+    .error {
+      color: var(--danger-color);
+      font-size: var(--font-size-sm);
+      margin-top: var(--spacing-xs);
+      display: block;
+    }
+  }
+
+  .formActions {
+    display: flex;
+    gap: var(--spacing-md);
+    margin-top: var(--spacing-xl);
+
+    button {
+      flex: 1;
+    }
+  }
+}

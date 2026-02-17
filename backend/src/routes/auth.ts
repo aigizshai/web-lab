@@ -28,23 +28,47 @@ interface JwtPayload {
 }
 
 // Регистрация
+// Регистрация с новыми полями
 router.post(
   '/register',
-  validateRequest(['name', 'email', 'password']),
-  async (
-    req: express.Request<object, object, RegisterBody>,
-    res: express.Response,
-  ): Promise<void> => {
-    const { name, email, password } = req.body;
+  validateRequest([
+    'surname',
+    'name',
+    'patronymic',
+    'gender',
+    'birthDate',
+    'email',
+    'password',
+  ]),
+  async (req, res) => {
     try {
+      const { surname, name, patronymic, gender, birthDate, email, password } =
+        req.body;
+
       // Проверка уникальности email
       const existingUser = await User.findOne({ where: { email } });
       if (existingUser) {
-        res.status(409).json({ error: 'Email уже используется' });
-        return;
+        return res.status(409).json({ error: 'Email уже используется' });
       }
 
-      const user = await User.create({ name, email, password });
+      // Дополнительная проверка даты (хотя в модели есть валидация)
+      if (new Date(birthDate) > new Date()) {
+        return res
+          .status(400)
+          .json({ error: 'Дата рождения не может быть в будущем' });
+      }
+
+      const user = await User.create({
+        surname,
+        name,
+        patronymic,
+        gender,
+        birthDate,
+        email,
+        password,
+      });
+
+      // Не возвращаем пароль
       const { password: _, ...userWithoutPassword } = user.toJSON();
       res.status(201).json(userWithoutPassword);
     } catch (error) {
@@ -53,7 +77,6 @@ router.post(
     }
   },
 );
-
 // Вход
 router.post(
   '/login',
@@ -173,6 +196,33 @@ router.get(
     } catch (error) {
       console.error('Ошибка получения профиля:', error);
       res.status(401).json({ error: 'Недействительный токен' });
+    }
+  },
+);
+
+router.put(
+  '/profile',
+  validateRequest(['surname', 'name', 'patronymic', 'gender', 'birthDate']), // все поля обязательны
+  async (req, res) => {
+    try {
+      const user = req.user as User;
+      const { surname, name, patronymic, gender, birthDate } = req.body;
+
+      // Проверка даты
+      if (new Date(birthDate) > new Date()) {
+        return res
+          .status(400)
+          .json({ error: 'Дата рождения не может быть в будущем' });
+      }
+
+      await user.update({ surname, name, patronymic, gender, birthDate });
+      const updatedUser = await User.findByPk(user.id, {
+        attributes: { exclude: ['password'] },
+      });
+      res.json(updatedUser);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Ошибка обновления профиля' });
     }
   },
 );

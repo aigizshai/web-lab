@@ -6,9 +6,13 @@ import Event from '@models/Event';
 const router = express.Router();
 
 interface CreateUserBody {
+  surname: string;
   name: string;
+  patronymic: string;
+  gender: 'male' | 'female';
+  birthDate: string;
   email: string;
-  password?: string; // опционально, так как в текущей логике не используется
+  password: string;
 }
 
 router.use(passport.authenticate('jwt', { session: false }));
@@ -21,7 +25,8 @@ router.post(
     res: express.Response,
   ): Promise<void> => {
     try {
-      const { name, email } = req.body;
+      const { surname, name, patronymic, gender, birthDate, email, password } =
+        req.body;
 
       // Проверка обязательных полей
       if (!name || !email) {
@@ -37,7 +42,11 @@ router.post(
       }
 
       const user = await User.create({
+        surname,
         name,
+        patronymic,
+        gender,
+        birthDate,
         email,
         password: 'defaultPassword',
       });
@@ -98,5 +107,62 @@ router.get(
     }
   },
 );
+
+router.put('/:id', async (req, res) => {
+  try {
+    const userId = parseInt(req.params.id, 10);
+    if (isNaN(userId)) {
+      return res.status(400).json({ error: 'Некорректный ID пользователя' });
+    }
+
+    const authenticatedUser = req.user as any;
+    if (!authenticatedUser || authenticatedUser.id !== userId) {
+      return res
+        .status(403)
+        .json({ error: 'Нет прав для редактирования этого пользователя' });
+    }
+
+    const user = await User.findByPk(userId);
+    if (!user) {
+      return res.status(404).json({ error: 'Пользователь не найден' });
+    }
+
+    const allowedFields = [
+      'surname',
+      'name',
+      'patronymic',
+      'gender',
+      'birthDate',
+    ];
+    const updateData: any = {};
+
+    for (const field of allowedFields) {
+      if (req.body[field] !== undefined) {
+        updateData[field] = req.body[field];
+      }
+    }
+
+    if (Object.keys(updateData).length === 0) {
+      return res.status(400).json({ error: 'Нет данных для обновления' });
+    }
+
+    if (updateData.birthDate && new Date(updateData.birthDate) > new Date()) {
+      return res
+        .status(400)
+        .json({ error: 'Дата рождения не может быть в будущем' });
+    }
+
+    await user.update(updateData);
+
+    const updatedUser = await User.findByPk(userId, {
+      attributes: { exclude: ['password'] },
+    });
+
+    res.json(updatedUser);
+  } catch (error) {
+    console.error('Ошибка обновления пользователя:', error);
+    res.status(500).json({ error: 'Ошибка сервера' });
+  }
+});
 
 export default router;

@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk, type PayloadAction } from '@reduxjs/toolkit';
 import { authService } from '../../api/authService';
 import { storage } from '../../utils/storage';
-import type { LoginRequest, RegisterRequest, User } from '../../types/event';
+import type { User, LoginRequest, RegisterRequest } from '../../types/event';
 
 interface AuthState {
   user: User | null;
@@ -19,16 +19,12 @@ const initialState: AuthState = {
 
 export const login = createAsyncThunk(
   'auth/login',
-  async (data: LoginRequest, { rejectWithValue }) => {
+  async (data: LoginRequest, {rejectWithValue }) => {
     try {
       const response = await authService.login(data);
       storage.setToken(response.accessToken);
-      storage.setRefreshToken(response.refreshToken);
-      const user: User = {
-        id: response.id,
-        name: response.name,
-        email: ''
-      };
+      // Получаем полный профиль
+      const user = await authService.getProfile();
       storage.setUser(user);
       return user;
     } catch (error: any) {
@@ -36,7 +32,6 @@ export const login = createAsyncThunk(
     }
   }
 );
-
 
 export const fetchProfile = createAsyncThunk(
   'auth/fetchProfile',
@@ -59,6 +54,19 @@ export const register = createAsyncThunk(
       return;
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message || 'Ошибка регистрации');
+    }
+  }
+);
+
+export const updateProfile = createAsyncThunk(
+  'auth/updateProfile',
+  async ({ userId, data }: { userId: number; data: Partial<Omit<User, 'id' | 'email'>> }, { rejectWithValue }) => {
+    try {
+      const updatedUser = await authService.updateProfile(userId, data);
+      storage.setUser(updatedUser);
+      return updatedUser;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message || 'Ошибка обновления профиля');
     }
   }
 );
@@ -114,6 +122,19 @@ const authSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(register.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload as string;
+      })
+      // updateProfile
+      .addCase(updateProfile.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(updateProfile.fulfilled, (state, action: PayloadAction<User>) => {
+        state.isLoading = false;
+        state.user = action.payload;
+      })
+      .addCase(updateProfile.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload as string;
       })
